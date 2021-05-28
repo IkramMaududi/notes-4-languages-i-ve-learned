@@ -1,0 +1,173 @@
+Logical Operator - A Quick Summary
+As a reference which you can come back to (or print out), here's a quick summary of how logical operators and comparison operators behave in JavaScript:
+
+    const userName = 'Max';
+    const altName = '';
+    console.log(userName === 'Max'); // generates and prints a boolean => true
+    console.log(userName); // wasn't touched, still is a string => 'Max'
+
+    console.log(userName || null); // userName is truthy and therefore returned by || => 'Max'
+    console.log(altName || 'Max'); // altName is falsy (empty string), hence 'Max' is returned => 'Max'
+    console.log(altName || ''); // both altName and '' are falsy but if the first operand is falsy, the second one is always returned => ''
+    console.log(altName || null || 'Anna'); // altName and null are falsy, 'Anna' is returned => 'Anna'
+
+    console.log(userName && 'Anna'); // userName is truthy, hence second (!) value is returned => 'Anna'
+    console.log(altName && 'Anna'); // altName is falsy, hence first value is returned => ''
+    console.log(userName && ''); // userName is truthy, hence second value is returned => ''
+
+
+-Always keep in mind: NO operator (neither ===, > etc. nor && or ||) changes the variable you might be using in the comparison. In the above examples, the values stored in userName and altName are NEVER changed.
+
+-These symbols: ===, > etc. just generate new boolean values which are used in the comparison. || and && generate NO booleans, they just treat the values before and after them as conditions (which therefore need to yield boolean values and are coerced to booleans if required).
+
+-Because of the above-described behaviors, you often use || in JavaScript to assign default/ fallback values to variables/ constants:
+JavaScript variables are loosely/dynamically typed and the language doesn’t care how a value is declared or changed.
+
+let x;
+x = 1;   // x is a number
+x = '1'; // x is a string
+x = [1]; // x is an array
+Seemingly different values equate to true when compared with == (loose or abstract equality) because JavaScript (effectively) converts each to a string representation before comparison:
+
+// all true
+1 == '1';
+1 == [1];
+'1' == [1];
+
+A more obvious false result occurs when comparing with === (strict equality) because the type is considered:
+  // all false
+  1 === '1';
+  1 === [1];
+  '1' === [1];
+
+Internally, JavaScript sets a value to one of six primitive data types:
+  1. Undefined (a variable with no defined value)
+  2. Null (a single null value)
+  3. Boolean (true or false)
+  4. Number (this includes Infinity and NaN – not a number!)
+  5. String (textual data)
+  6. Symbol (a unique and immutable primitive new to ES6/2015)
+Everything else is an Object — including arrays.
+
+
+
+Truthy and Falsy
+As well as a type, each value also has an inherent boolean value, generally known as either truthy or falsy. Some of the rules are a little bizarre so understanding the concepts and effect on comparison helps when debugging JavaScript applications.
+
+The following values are always falsy:
+ 1. false
+ 2. 0 (zero)
+ 3. '' or "" (empty string)
+ 4. null
+ 5. undefined
+ 6. NaN
+
+Everything else is truthy. That includes:
+  '0' (a string containing a single zero)
+  'false' (a string containing the text “false”)
+  [] (an empty array)
+  {} (an empty object)
+  function(){} (an “empty” function)
+
+A single value can therefore be used within conditions, e.g.
+  if (value) {
+    // value is truthy
+  }
+  else {
+    // value is falsy
+    // it could be false, 0, '', null, undefined or NaN
+  }
+
+Unexpected situations can occur when comparing truthy and falsy values using the == loose equality:
+
+LOOSE EQUALITY COMPARISONS WITH ==
+==          true    false     0      ''      null   undefined   NaN         Infinity    []      {}
+true        true    false   false   false   false   false       false       false       false   false
+false       false   true    true    true    false   false       false       false       true    false
+0           false   true    true    true    false   false       false       false       true    false
+''          false   true    true    true    false   false       false       false       true    false
+null        false   false   false   false   true    true        false       false       false   false
+undefined   false   false   false   false   true    true        false       false       false   false
+NaN         false   false   false   false   false   false       false       false       false   false
+Infinity    false   false   false   false   false   false       false       true        false   false
+[]          false   true    true    true    false   false       false       false       false   false
+{}          false   false   false   false   false   false       false       false       false   false
+The rules:
+
+false, zero and empty strings are all equivalent.
+null and undefined are equivalent to themselves and each other but nothing else.
+NaN is not equivalent to anything – including another NaN!
+Infinity is truthy – but cannot be compared to true or false!
+An empty array is truthy – yet comparing with true is false and comparing with false is true?!
+Examples:
+
+// all true
+false == 0;
+0 == '';
+null == undefined;
+[] == false;
+!![0] == true;
+
+// all false
+false == null;
+NaN == NaN;
+Infinity == true;
+[] == true;
+[0] == true;
+
+The situation is clearer when using a strict comparison because the value types must match:
+Strict Equality Comparisons With ===
+===         true    false     0      ''     null    undefined   NaN     Infinity    []      {}
+true        true    false   false   false   false   false       false    false      false   false
+false       false   true    false   false   false   false       false    false      false   false
+0           false   false   true    false   false   false       false    false      false   false
+''          false   false   false   true    false   false       false    false      false   false
+null        false   false   false   false   true    false       false    false      false   false
+undefined   false   false   false   false   false   true        false    false      false   false
+NaN         false   false   false   false   false   false       false    false      false   false
+Infinity    false   false   false   false   false   false       false    true       false   false
+[]          false   false   false   false   false   false       false    false      false   false
+{}          false   false   false   false   false   false       false    false    false   false
+The only exception is NaN which remains stubbornly inequivalent to everything.
+
+Recommendations
+Truthy and falsy values can catch out the most experienced developers. Those new to programming or migrating from other languages have no chance! Fortunately, there are simple steps to catch the most difficult-to-spot errors when handling truthy and falsy variables:
+
+1. Avoid direct comparisons
+It’s rarely necessary to compare two truthy and falsy values when a single value will always equate to true or false:
+
+// instead of
+if (x == false) // ...
+// runs if x is false, 0, '', or []
+
+// use
+if (!x) // ...
+// runs if x is false, 0, '', NaN, null or undefined
+2. Use === strict equality
+Use a === strict equality (or !== strict inequality) comparisons to compare values and avoid type conversion issues:
+
+// instead of
+if (x == y) // ...
+// runs if x and y are both truthy or both falsy
+// e.g. x = null and y = undefined
+
+// use
+if (x === y) // ...
+// runs if x and y are identical...
+// except when both are NaN
+3. Convert to real Boolean values where necessary
+Any value can be converted to a real Boolean value using a double-negative !! to be absolutely certain a false is generated only by false, 0, "", null, undefined and NaN:
+
+// instead of
+if (x === y) // ...
+// runs if x and y are identical...
+// except when both are NaN
+
+// use
+if (!!x === !!y) // ...
+// runs if x and y are identical...
+// including when either or both are NaN
+
+Conclusion
+Truthy and falsy values allow you to write terse JavaScript conditions and ternary operators. However, always consider the edge cases. A rogue empty array or NaN variable could lead to many hours of debugging grief!
+

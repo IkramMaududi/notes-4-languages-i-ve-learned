@@ -1,0 +1,21 @@
+Generally in React, if you refer to a method without (), 'this' will be undefined. So, you can do the following:
+
+1. bind this in the base constructor
+          this.handleClick = this.handleClick.bind(this);
+2. use the public class field syntax (defining method using arrow function)
+          someFunction = () => {....}
+3. use arrow function in the callback
+          onClick={() => this.handleClick()}
+
+- The problem with the 3rd this syntax is that a different callback is created each time the class object renders. In most cases, this is fine.  However, if this callback is passed as a prop to lower components, those components might do an extra re-rendering. 
+- We recommend using the 1st and 2nd solution to avoid this problem
+
+
+
+Passing Arguments to Event Handlers
+
+- Inside a loop, it is common to want to pass an extra parameter to an event handler. 
+- For example, if id is the row ID, either of the following would work:
+	<button onClick={(e) => this.deleteRow(id, e)}>Delete Row</button>
+	<button onClick={this.deleteRow.bind(this, id)}>Delete Row</button>
+

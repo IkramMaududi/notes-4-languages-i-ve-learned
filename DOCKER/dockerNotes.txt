@@ -1,0 +1,61 @@
+systemctl is-active docker 
+systemctl is-enabled docker 
+systemctl status docker 
+systemctl stop docker		 
+systemctl start docker	 
+systemctl  restart docker 
+
+//check for image list
+docker image ls
+
+//check for container
+docker container ls  =  docker ps					// show running containers
+docker container ls -a 								// show all containers, either running or not
+docker ps -aq										// show all containers and only show the container ID
+
+// For better readibility
+docker ps --format="ID\t{{.ID}}\nNAME\t{{.Names}}\nIMAGE\t{{.Image}}\nPORTS\t.{{Ports}}\nCOMMAND\t.{{Command}}\nCREATED\t.{{CreatedAt}}\nSTATUS\t{{.Status}}\n"
+//in short
+export FORMAT="ID\t{{.ID}}\nNAME\t{{.Names}}\nIMAGE\t{{.Image}}\nPORTS\t.{{Ports}}\nCOMMAND\t.{{Command}}\nCREATED\t.{{CreatedAt}}\nSTATUS\t{{.Status}}\n"
+docker ps --format=$FORMAT
+
+
+//to run an image in a container
+docker run nginx:latest								  //nginx is image name, latest is tag name; this will leave the terminal hanging
+docker run ~d nginx:latest	 						  //-d here means detachable, so the terminal won't be hanging
+docker run -d -p 8080:80 nginx:latest				  //-p 8080:80 means that we map our localhost:8080 to container port of 80/tcp
+docker run -d -p 3000:80 -p 8080:80 nginx:latest	  //we map localhost:3000 and localhost:8080 to container port of 80/tcp
+docker run --name hisoka -d -p 8080:80 nginx:latest   //run a container with a specific name, that is hisoka
+docker run gallant_kowalevski						  //run docker exactly as when the container name is gallant_kowalevski
+
+
+//to stop a ruuning container
+docker stop cf1588c643da							//cf1588c643da is a container ID
+docker stop gallant_kowalevski						//gallant_kowalevski is a container name
+
+
+//delete a container
+docker rm 60d7ad217f61								//60d7ad217f61 is a container ID
+docker rm hisoka									//hisoka is a container name
+docker rm $(docker ps -aq)							//delete all non running containers
+docker rm -f $(docker ps -aq)						//delete all containers, whether it's still running or not
+
+
+
+Volumes:
+- Allow sharing of data
+	^ files & folders
+	^ between host & container
+	^ between containers
+
+// start the volume in the folder where we have index html file and the host location is /usr/share/nginx/html
+docker run --name website -v $(pwd):/usr/share/nginx/html:ro -d -p 8080:80 nginx                   //read only in /usr/share/nginx/html
+docker run --name website -v $(pwd):/usr/share/nginx/html -d -p 8080:80 nginx  					   //it's not be modified now
+
+
+// moving to a container location
+docker exec -it website bash
+
+
+// build
+docker build --tag website:latest .				//. looks for the docker file and build image from it

@@ -1,0 +1,38 @@
+git log -3                                  #show only the last 3 log
+git log --graph                             #show log along with graph
+git log --oneline                           #show log in oneline
+git log --all --decorate --oneline --graph  #show all log in single line format along with its graph
+
+git commit -m "commit message"              #commit after files have been added to staging area
+git commit -am "commit message"             #can perform commit, if any added file has undergone modification
+
+git log -- style.css                        #show the commit history of style.css
+git checkout 78d78 -- style.css             #change the style.css to a certain commit hash 
+git checkout aBranchName                    #move branch
+git checkout -b otherBranch                 #move to other branch, even though that branch may not exist yet
+
+git branch newBranch                        #make a new branch and the name is newBranch 
+git branch --merged                         #show the merged branch
+git branch -d aBranch                       #delete a branch, which name is aBranch, after it has been merged
+git branch -D uselessBranch                 #delete a branch, which name is uselessBranch, eventhough it hasn't been merged
+git branch -M main                          #rename a branch name to main
+
+git merge one                               #merge branch one into current active branch
+git merge remoteName/branchName             #syntax to use if we are working with multiple remote git location
+
+git remote -v                               #show what remote location it is connected to
+git remote add remoteName https://sth.git   #add remote git location
+
+#The -u in this command is a short-hand for --set-upstream. Using this flag you are basically telling git to automatically link your local master to the remote master. Therefore you only need to do this once. After that you can just write git pull and git push on master.
+git push -u remoteName aBranch              
+
+git push remoteName --delete aBranch        #delete a branch in a remote git location
+git remote remove remoteName                #remove remote location
+git remote set-url origin https://github.com/career-karma-tutorials/web-tutorials       #update remote url
+
+ssh -T git@github.com                       #open ssh connection to github
+
+git fetch remoteName                        #useful to know if any changes happens in remote git location
+git pull remoteName                         #download content from connected remote git location
+
+

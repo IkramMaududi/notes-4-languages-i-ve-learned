@@ -1,0 +1,56 @@
+DOM
+
+QUERYING ELEMENTS
+1. For single elements: querySelector(), getELementById()
+2. For all elements: querySelectorAll(), getElementsByTagName()
+
+
+ATTRIBUTE VS PROPERTIES
+- attribute: are placed in HTML code, on element tags,
+- properties: are in the HTML DOM
+
+
+NODES:
+- the objects that make up the DOM
+- HTML tags are 'element nodes' or just 'elements'
+- text creates text node
+- attributes create 'attribute node'
+
+
+TRAVERSING DOM
+1. to select PARENT: parentNode, parentElement, closest() - closest is used to select the closest direct ancestor
+2. to select CHILD: firstChild, firstElementChild, lastChild, lastElementChild, childNodes, children, (and using querying elements above, line 4-5)
+3. to select SIBLING: previousSibling, previousElementSibling, nextSibling, nextElementSibling
+
+
+STYLING DOM
+1. via style property (inline style property)
+2. via className
+3. via classList (list of class)
+    property: length
+    method: add(class1, class2,...), remove(class1, class2,...), item(index),
+            ,contains(class) - return ture of false,
+            toggle(class, true|false) - true or false is optional, without true/false it toggles between the two
+                Remove a class: element.classList.toggle("classToRemove", false);
+                Add a class: element.classList.toggle("classToAdd", true);
+
+
+CREATE AND INSERTING ELEMENTS
+A. Write HTML String in a certain position
+     -innerHTML
+     -insertAdjacentHTML(position,text) - position: "afterend" - After the element
+                                                    "beforebegin" - Before the element
+                                                    "afterbegin" - After the beginning of the element (as the first child)
+                                                    "beforeend" - Before the end of the element (as the last child)
+B. Create HTML element first and then insert it to somewhere
+   first: createElement() , then     1. appendChild(), append()
+                                     2. prepend(), before(), after(), insertBefore()
+
+
+CLONING DOM NODEs
+ clonesNode()
+
+
+Remove Elements
+ .remove(), replaceChild(), replaceWith()
+
